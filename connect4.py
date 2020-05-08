@@ -30,44 +30,48 @@ class Connect4(object):
 	def create_board(self):
 		return np.zeros((self.ROW_COUNT,self.COLUMN_COUNT))
 
-	def drop_piece(self, row, col, piece):
-		self.board[row][col] = piece
-		self.draw_board()
+	def drop_piece(self, board, row, col, piece):
+		board[row][col] = piece
+		# self.draw_board()
 
 	def is_valid_location(self, board, col):
 		return board[self.ROW_COUNT-1][col] == 0
 
-	def get_next_open_row(self, col):
+	def get_next_open_row(self, board, col):
 		for r in range(self.ROW_COUNT):
-			if self.board[r][col] == 0:
+			if board[r][col] == 0:
 				return r
 
 	def print_board(self):
 		print(np.flip(self.board, 0))
 
-	def winning_move(self, piece):
+	def winning_move(self, board, piece):
 		# Check horizontal locations for win
-		for c in range(self.COLUMN_COUNT-3):
+		for c in range(self.COLUMN_COUNT - 3):
 			for r in range(self.ROW_COUNT):
-				if self.board[r][c] == piece and self.board[r][c+1] == piece and self.board[r][c+2] == piece and self.board[r][c+3] == piece:
+				if board[r][c] == piece and board[r][c + 1] == piece and board[r][c + 2] == piece and board[r][
+					c + 3] == piece:
 					return True
 
 		# Check vertical locations for win
 		for c in range(self.COLUMN_COUNT):
-			for r in range(self.ROW_COUNT-3):
-				if self.board[r][c] == piece and self.board[r+1][c] == piece and self.board[r+2][c] == piece and self.board[r+3][c] == piece:
+			for r in range(self.ROW_COUNT - 3):
+				if board[r][c] == piece and board[r + 1][c] == piece and board[r + 2][c] == piece and board[r + 3][
+					c] == piece:
 					return True
 
 		# Check positively sloped diaganols
-		for c in range(self.COLUMN_COUNT-3):
-			for r in range(self.ROW_COUNT-3):
-				if self.board[r][c] == piece and self.board[r+1][c+1] == piece and self.board[r+2][c+2] == piece and self.board[r+3][c+3] == piece:
+		for c in range(self.COLUMN_COUNT - 3):
+			for r in range(self.ROW_COUNT - 3):
+				if board[r][c] == piece and board[r + 1][c + 1] == piece and board[r + 2][c + 2] == piece and \
+						board[r + 3][c + 3] == piece:
 					return True
 
 		# Check negatively sloped diaganols
-		for c in range(self.COLUMN_COUNT-3):
+		for c in range(self.COLUMN_COUNT - 3):
 			for r in range(3, self.ROW_COUNT):
-				if self.board[r][c] == piece and self.board[r-1][c+1] == piece and self.board[r-2][c+2] == piece and self.board[r-3][c+3] == piece:
+				if board[r][c] == piece and board[r - 1][c + 1] == piece and board[r - 2][c + 2] == piece and \
+						board[r - 3][c + 3] == piece:
 					return True
 
 	def draw_board(self):
@@ -89,11 +93,11 @@ class Connect4(object):
 		pygame.display.update()
 
 	def move(self, col, turn):
-		row = self.get_next_open_row(col)
-		self.drop_piece(row, col, turn+1)
+		row = self.get_next_open_row(self.board, col)
+		self.drop_piece(self.board, row, col, turn+1)
 		self.time_of_last_move = pygame.time.get_ticks()
 
-		if self.winning_move(turn+1):
+		if self.winning_move(self.board, turn+1):
 			label = self.myfont.render(f"Player {turn+1} wins!!", 1, self.colors[turn])
 			self.screen.blit(label, (40, 10))
 			self.game_over = True
