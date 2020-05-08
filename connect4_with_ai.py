@@ -117,27 +117,27 @@ class Connect4AI(Connect4):
 			turn = random.randint(self.PLAYER, self.AI)
 			while not self.game_over:
 				for event in pygame.event.get():
+					played = False
 					if event.type == pygame.QUIT:
 						sys.exit()
 					if turn == self.PLAYER:
+
 						if event.type == pygame.MOUSEMOTION:
-							pygame.draw.rect(self.screen, self.BLACK, (0, 0, self.width, self.SQUARESIZE))
 							posx = event.pos[0]
+							pygame.draw.rect(self.screen, self.BLACK, (0, 0, self.width, self.SQUARESIZE))
 							self.mouse_motion(posx, turn)
 						if event.type == pygame.MOUSEBUTTONDOWN and self.ready():
 							posx = event.pos[0]
 							col = int(math.floor(posx / self.SQUARESIZE))
 							if self.is_valid_location(self.board, col):
-								self.move(col, turn)
-								turn += 1
-								turn = turn % 2
+								played = True
 					else:
 						col, minimax_score = self.minimax(self.board, 5, -math.inf, math.inf, True)
-
 						if self.is_valid_location(self.board, col):
-							self.move(col, turn)
-							turn += 1
-							turn = turn % 2
+							played = True
+					if played:
+						self.move(col, turn)
+						turn = (turn + 1)%2
 			pygame.time.wait(3000)
 
 if __name__ == "__main__":
