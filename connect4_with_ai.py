@@ -86,10 +86,11 @@ class Connect4AI(Connect4):
 				return (None, self.score_position(board, self.AI_PIECE))
 		value = -math.inf if maximizingPlayer else math.inf
 		column = random.choice(valid_locations)
+		piece = self.AI_PIECE if maximizingPlayer else self.PLAYER_PIECE
 		for col in valid_locations:
 			row = self.get_next_open_row(board, col)
 			b_copy = board.copy()
-			self.drop_piece(b_copy, row, col, self.AI_PIECE)
+			self.drop_piece(b_copy, row, col, piece)
 			new_score = self.minimax(b_copy, depth-1, alpha, beta, not maximizingPlayer)[1]
 			if maximizingPlayer:
 				if new_score > value:
@@ -104,22 +105,6 @@ class Connect4AI(Connect4):
 			if alpha >= beta:
 				break
 		return column, value
-
-		# else: # Minimizing player
-		# 	value = math.inf
-		# 	column = random.choice(valid_locations)
-		# 	for col in valid_locations:
-		# 		row = self.get_next_open_row(board, col)
-		# 		b_copy = board.copy()
-		# 		self.drop_piece(b_copy, row, col, self.PLAYER_PIECE)
-		# 		new_score = self.minimax(b_copy, depth-1, alpha, beta, True)[1]
-		# 		if new_score < value:
-		# 			value = new_score
-		# 			column = col
-		# 		beta = min(beta, value)
-		# 		if alpha >= beta:
-		# 			break
-		# 	return column, value
 
 	def get_valid_locations(self, board):
 		valid_locations = []
