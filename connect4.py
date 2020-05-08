@@ -34,8 +34,8 @@ class Connect4(object):
 		self.board[row][col] = piece
 		self.draw_board()
 
-	def is_valid_location(self, col):
-		return self.board[self.ROW_COUNT-1][col] == 0
+	def is_valid_location(self, board, col):
+		return board[self.ROW_COUNT-1][col] == 0
 
 	def get_next_open_row(self, col):
 		for r in range(self.ROW_COUNT):
@@ -117,7 +117,7 @@ class Connect4(object):
 				if event.type == pygame.MOUSEBUTTONDOWN and self.ready():
 					posx = event.pos[0]
 					col = int(math.floor(posx / self.SQUARESIZE))
-					if self.is_valid_location(col):
+					if self.is_valid_location(self.board, col):
 						self.move(col, turn)
 						turn += 1
 						turn = turn % 2
